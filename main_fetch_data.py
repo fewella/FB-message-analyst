@@ -14,9 +14,9 @@ def make_plot():
 
 	ax1 = fig.add_subplot(111)
 
-	ax1.set_title("Love Nerds Data")    
-	ax1.set_xlabel('timestamps ')
-	ax1.set_ylabel('total messages')
+	ax1.set_title("Accumulated messages over time")    
+	ax1.set_xlabel('Timestamps ')
+	ax1.set_ylabel('Total Messages')
 
 	ax1.plot(x,y, c='r', label='the data')
 
@@ -40,7 +40,7 @@ def fetch_timestamp_data():
 		print(str(date) + ": " + str(timestamp_data[date]))
 
 def messages_to_file():
-	f = open("convo2.txt", "w")
+	f = open("Conversation.txt", "w")
 	for message in all_messages:
 		try:
 			f.write(str(message.text) + " " + time.strftime("%D", time.localtime(int(message.timestamp)/1000 - 14400)) + "\n")
@@ -49,7 +49,7 @@ def messages_to_file():
 	f.close()
 
 def timestamps_to_file():
-	f = open("timestamps.txt", "w")
+	f = open("Timestamps.txt", "w")
 	n = 0
 	m = 0
 	while m <= len(all_messages):
