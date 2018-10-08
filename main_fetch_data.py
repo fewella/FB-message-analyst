@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 all_messages = []
-months = {'January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'}
-
 
 def make_plot():
     with open("timestamps.txt") as f:
@@ -41,9 +38,6 @@ def fetch_timestamp_data():
         else:
             timestamp_data[date] += 1
 
-    for date in timestamp_data:
-        print(str(date) + ": " + str(timestamp_data[date]))
-
 
 def messages_to_file(uid, user_name):
     f = open("Conversation.txt", "w")
@@ -69,14 +63,6 @@ def timestamps_to_file():
     f.close()
 
 
-def sort_by_months():
-    f = open("Timestamps.txt", "r")
-    timestamps = []
-    for datapoint in f:
-        parts = datapoint.split()
-        timestamps.append(parts[0])
-
-
 def main():
     global all_messages
     target = raw_input("Whose messages? ")
@@ -94,13 +80,10 @@ def main():
     while len(messages) == 10000:
         timestamp = messages[len(messages) - 1].timestamp
         messages = client.fetchThreadMessages(user.uid, limit=10000, before=timestamp)
-
         all_messages += messages
 
-    fetch_timestamp_data()
     messages_to_file(uid, user_name)
     timestamps_to_file()
-    sort_by_months()
     make_plot()
 
 
