@@ -3,6 +3,11 @@ import fbchat
 import os
 
 import matplotlib.pyplot as plt
+from datetime import datetime
+
+all_messages = []
+months = {'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'}
 
 
 def make_plot():
@@ -20,8 +25,6 @@ def make_plot():
     ax1.set_ylabel('Total Messages')
 
     ax1.plot(x, y, c='r', label='the data')
-
-    leg = ax1.legend()
 
     plt.show()
 
@@ -42,14 +45,14 @@ def fetch_timestamp_data():
         print(str(date) + ": " + str(timestamp_data[date]))
 
 
-def messages_to_file():
+def messages_to_file(uid, user_name):
     f = open("Conversation.txt", "w")
     for message in all_messages:
         try:
             if message.author == uid:
                 name = user_name
             else:
-                name = "Ajay Fewell: "
+                name = "Ajay Fewell"
             f.write(name + ": " + str(message.text) + " " + time.strftime("%D", time.localtime(
                 int(message.timestamp) / 1000 - 14400)) + "\n")
         except:
@@ -59,25 +62,24 @@ def messages_to_file():
 
 def timestamps_to_file():
     f = open("Timestamps.txt", "w")
-    n = 0
-    m = 0
-    while m <= len(all_messages):
-        n += 1
-        m += 1
-        f.write(str(all_messages[len(all_messages) - m].timestamp) + " " + str(n) + "\n")
+    message_count = 0
+    while message_count <= len(all_messages):
+        message_count += 1
+        f.write(str(all_messages[len(all_messages) - message_count].timestamp) + " " + str(message_count) + "\n")
     f.close()
 
 
 def sort_by_months():
     f = open("Timestamps.txt", "r")
+    timestamps = []
+    for datapoint in f:
+        parts = datapoint.split()
+        timestamps.append(parts[0])
 
 
-
-if __name__ == "__main__":
+def main():
+    global all_messages
     target = raw_input("Whose messages? ")
-
-    months = {'January', 'February', 'March', 'April', 'May', 'June',
-              'July', 'August', 'September', 'October', 'November', 'December'}
 
     client = fbchat.Client(os.environ['fb_username'], os.environ['fb_password'])
     user = client.searchForUsers(target)[0]
@@ -85,7 +87,6 @@ if __name__ == "__main__":
     uid = user.uid
     user_name = user.name
 
-    all_messages = []
     messages = client.fetchThreadMessages(user.uid, limit=10000)
 
     all_messages += messages
@@ -97,7 +98,11 @@ if __name__ == "__main__":
         all_messages += messages
 
     fetch_timestamp_data()
-    messages_to_file()
+    messages_to_file(uid, user_name)
     timestamps_to_file()
     sort_by_months()
     make_plot()
+
+
+if __name__ == "__main__":
+    main()
