@@ -2,28 +2,7 @@ import time
 import fbchat
 import os
 
-import matplotlib.pyplot as plt
-from datetime import datetime
-
 all_messages = []
-
-def make_plot():
-    with open("timestamps.txt") as f:
-        lines = f.readlines()
-        x = [line.split()[0] for line in lines]
-        y = [line.split()[1] for line in lines]
-
-    fig = plt.figure()
-
-    ax1 = fig.add_subplot(111)
-
-    ax1.set_title('Accumulated messages over time')
-    ax1.set_xlabel('Timestamps ')
-    ax1.set_ylabel('Total Messages')
-
-    ax1.plot(x, y, c='r', label='the data')
-
-    plt.show()
 
 
 def fetch_timestamp_data():
@@ -69,22 +48,19 @@ def main():
 
     client = fbchat.Client(os.environ['fb_username'], os.environ['fb_password'])
     user = client.searchForUsers(target)[0]
-
     uid = user.uid
     user_name = user.name
 
-    messages = client.fetchThreadMessages(user.uid, limit=10000)
+    messages_chunk = client.fetchThreadMessages(user.uid, limit=10000)
+    all_messages += messages_chunk
 
-    all_messages += messages
-
-    while len(messages) == 10000:
-        timestamp = messages[len(messages) - 1].timestamp
-        messages = client.fetchThreadMessages(user.uid, limit=10000, before=timestamp)
-        all_messages += messages
+    while len(messages_chunk) == 10000:
+        timestamp = messages_chunk[len(messages_chunk) - 1].timestamp
+        messages_chunk = client.fetchThreadMessages(user.uid, limit=10000, before=timestamp)
+        all_messages += messages_chunk
 
     messages_to_file(uid, user_name)
     timestamps_to_file()
-    make_plot()
 
 
 if __name__ == "__main__":

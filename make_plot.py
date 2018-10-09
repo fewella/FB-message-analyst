@@ -13,10 +13,10 @@ if __name__ == '__main__':
     ax1 = fig.add_subplot(111)
 
     ax1.set_title("Love Nerds Data")
-    ax1.set_xlabel('timestamps ')
-    ax1.set_ylabel('total messages')
+    ax1.set_xlabel('Timestamps ')
+    ax1.set_ylabel('Total messages')
 
-    ax1.plot(x,y, c='r', label='the data')
+    ax1.plot(x, y, c='r', label='the data')
 
     leg = ax1.legend()
 
