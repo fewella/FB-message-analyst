@@ -1,6 +1,7 @@
 import time
 import fbchat
 import os
+import matplotlib.pyplot as plt
 
 all_messages = []
 
