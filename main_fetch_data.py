@@ -2,7 +2,7 @@ import time
 import fbchat
 import os
 
-import matplotlib.pyplot as plt
+all_messages = []
 
 def make_plot():
     with open("timestamps.txt") as f:
@@ -80,4 +80,4 @@ if __name__ == "__main__":
     messages_to_file()
     timestamps_to_file()
     make_plot()
-	
+
